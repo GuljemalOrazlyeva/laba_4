@@ -123,8 +123,7 @@ public class GraphicsDisplay extends JPanel {
              * 2) Вычтем из этого сколько делений требовалось изначально
              * 3) Набросим по половине недостающего расстояния на maxY и minY
              */
-            double yIncrement = (getSize().getHeight() / scale - (maxY -
-                    minY)) / 2;
+            double yIncrement = (getSize().getHeight() / scale - (maxY - minY)) / 2;
             maxY += yIncrement;
             minY -= yIncrement;
         }
@@ -204,6 +203,7 @@ public class GraphicsDisplay extends JPanel {
                 intGraphics.moveTo(point.getX(), point.getY());
             }
         }
+
         // Отобразить график
         canvas.draw(intGraphics);
 
@@ -213,9 +213,11 @@ public class GraphicsDisplay extends JPanel {
         int valueFuncInt = point[1].intValue();
         int sum = 0;
         while (valueFuncInt > 0) {
+
             sum += valueFuncInt % 10;
             valueFuncInt /= 10;
         }
+
         return sum < 10 ? true : false;
     }
     // Отображение маркеров точек, по которым рисовался график
