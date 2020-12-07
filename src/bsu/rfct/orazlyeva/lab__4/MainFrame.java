@@ -43,7 +43,6 @@ public class MainFrame extends JFrame {
         Toolkit kit = Toolkit.getDefaultToolkit();
 // Отцентрировать окно приложения на экране
         setLocation((kit.getScreenSize().width - WIDTH)/2,
-
                 (kit.getScreenSize().height - HEIGHT)/2);
 // Развѐртывание окна на весь экран
         setExtendedState(MAXIMIZED_BOTH);
@@ -64,7 +63,6 @@ public class MainFrame extends JFrame {
                 if (fileChooser.showOpenDialog(MainFrame.this) ==
 
                         JFileChooser.APPROVE_OPTION)
-
                     openGraphics(fileChooser.getSelectedFile());
 
             }
@@ -167,13 +165,15 @@ Double.SIZE/8 байт;
         } catch (FileNotFoundException ex) {
 // В случае исключительной ситуации типа "Файл не найден"показать сообщение об ошибке
 
-            JOptionPane.showMessageDialog(MainFrame.this, "Указанный файл не найден", "Ошибка загрузки данных", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(MainFrame.this,
+                    "Указанный файл не найден", "Ошибка загрузки данных", JOptionPane.WARNING_MESSAGE);
 
             return;
         } catch (IOException ex) {
 // В случае ошибки ввода из файлового потока показать сообщение об ошибке
 
-            JOptionPane.showMessageDialog(MainFrame.this, "Ошибка чтения координат точек из файла", "Ошибка загрузки данных",
+            JOptionPane.showMessageDialog(MainFrame.this,
+                    "Ошибка чтения координат точек из файла", "Ошибка загрузки данных",
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
