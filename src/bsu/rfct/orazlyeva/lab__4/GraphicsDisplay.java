@@ -333,3 +333,30 @@ public class GraphicsDisplay extends JPanel {
                     bounds.getWidth() - 10), (float) (labelPos.getY() + bounds.getY()));
         }
     }
+    /* Метод-помощник, осуществляющий преобразование координат.
+    * Оно необходимо, т.к. верхнему левому углу холста с координатами
+    * (0.0, 0.0) соответствует точка графика с координатами (minX, maxY),
+    где
+      * minX - это самое "левое" значение X, а
+    	    * maxY - самое "верхнее" значение Y.
+    */
+    protected Point2D.Double xyToPoint(double x, double y) {
+        // Вычисляем смещение X от самой левой точки (minX)
+        double deltaX = x - minX;
+        // Вычисляем смещение Y от точки верхней точки (maxY)
+        double deltaY = maxY - y;
+        return new Point2D.Double(deltaX * scale, deltaY * scale);
+    }
+    /* Метод-помощник, возвращающий экземпляр класса Point2D.Double
+     * смещѐнный по отношению к исходному на deltaX, deltaY
+     * К сожалению, стандартного метода, выполняющего такую задачу, нет.
+     */
+    protected Point2D.Double shiftPoint(Point2D.Double src, double deltaX,
+                                        double deltaY) {
+        // Инициализировать новый экземпляр точки
+        Point2D.Double dest = new Point2D.Double();
+        //Задать еѐ координаты как координаты существующей точки + заданные смещения
+        dest.setLocation(src.getX() + deltaX, src.getY() + deltaY);
+        return dest;
+    }
+}
