@@ -134,3 +134,87 @@ public class GraphicsDisplay extends JPanel {
             maxX += xIncrement;
             minX -= xIncrement;
         }
+        // Шаг 7 - Сохранить текущие настройки холста
+        Graphics2D canvas = (Graphics2D) g;
+        Stroke oldStroke = canvas.getStroke();
+        Color oldColor = canvas.getColor();
+        Paint oldPaint = canvas.getPaint();
+        Font oldFont = canvas.getFont();
+        // Шаг 8 - В нужном порядке вызвать методы отображения элементов графика
+        // Порядок вызова методов имеет значение, т.к. предыдущий рисунок будет затираться последующим
+        // Первыми (если нужно) отрисовываются оси координат.
+        if (showAxis) paintAxis(canvas);
+        // Затем отображается сам график
+        paintGraphics(canvas);
+        // А затем график "целая часть функции"
+        if (showIntGraphics) paintIntUnitOfGraphics(canvas);
+        // Затем (если нужно) отображаются маркеры точек, по которым строился график.
+        if (showMarkers) paintMarkers(canvas);
+        // Шаг 9 - Восстановить старые настройки холста
+        canvas.setFont(oldFont);
+        canvas.setPaint(oldPaint);
+        canvas.setColor(oldColor);
+        canvas.setStroke(oldStroke);
+    }
+
+    // Отрисовка графика по прочитанным координатам
+    protected void paintGraphics(Graphics2D canvas) {
+        // Выбрать линию для рисования графика
+        canvas.setStroke(graphicsStroke);
+        // Выбрать цвет линии
+        canvas.setColor(Color.RED);
+        /* Будем рисовать линию графика как путь, состоящий из множества сегментов (GeneralPath)
+         * Начало пути устанавливается в первую точку графика, после чего прямой соединяется со
+         * следующими точками
+         */
+        GeneralPath graphics = new GeneralPath();
+        for (int i = 0; i < graphicsData.length; i++) {
+            // Преобразовать значения (x,y) в точку на экране point
+            Point2D.Double point = xyToPoint(graphicsData[i][0], graphicsData[i][1]);
+            if (i > 0) {
+                // Не первая итерация цикла - вести линию в точку point
+                graphics.lineTo(point.getX(), point.getY());
+            } else {
+                // Первая итерация цикла - установить начало пути в точку point
+                graphics.moveTo(point.getX(), point.getY());
+            }
+        }
+        // Отобразить график
+        canvas.draw(graphics);
+    }
+    protected void paintIntUnitOfGraphics(Graphics2D canvas) {
+        // Выбрать линию для рисования графика
+        canvas.setStroke(graphicsIntStroke);
+        // Выбрать цвет линии
+        canvas.setColor(Color.blue);
+        GeneralPath intGraphics = new GeneralPath();
+        for (int i = 0; i < graphicsData.length; i++) {
+            // Преобразовать значения (x,y) в точку на экране point
+            Point2D.Double point = xyToPoint(graphicsData[i][0], graphicsData[i][1].intValue());
+            if (i > 0) {
+                if (graphicsData[i][1].intValue() == graphicsData[i - 1][1].intValue())
+                    intGraphics.lineTo(point.getX(), point.getY());
+                else {
+                    intGraphics.lineTo(point.getX(),
+                            xyToPoint(graphicsData[i][0], graphicsData[i - 1][1].intValue()).getY());
+                    intGraphics.moveTo(point.getX(), point.getY());
+                }
+            } else {
+                // Первая итерация цикла - установить начало пути в точку point
+                intGraphics.moveTo(point.getX(), point.getY());
+            }
+        }
+        // Отобразить график
+        canvas.draw(intGraphics);
+
+    }
+
+    protected boolean isSumLessThanTen(Double[] point) {
+        int valueFuncInt = point[1].intValue();
+        int sum = 0;
+        while (valueFuncInt > 0) {
+            sum += valueFuncInt % 10;
+            valueFuncInt /= 10;
+        }
+        return sum < 10 ? true : false;
+    }
